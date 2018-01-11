@@ -2,7 +2,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
 /* Dev packages */
 const morgan = require('morgan');
 
@@ -22,4 +21,5 @@ app.get('/', (req, res) => {
     res.send('Hello world!');
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}!`));
+
+app.listen(port, () => console.log(`Server started - Listening on port ${port}`));
