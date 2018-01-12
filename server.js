@@ -12,6 +12,8 @@ const morgan = require('morgan');
 const Item = require('./models/Item');
 const Template = require('./models/Template');
 const User = require('./models/User');
+const Procedure = require('./models/Procedure');
+const Company = require('./models/Company');
 
 // Use Express.js for the server, and set server port as variable //
 const app = express();
