@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 /* Endpoints */
 
 app.get('/api/users', (req, res) => {
-    console.log('received GET request for USER');
+    console.log('received GET request for USER', req.body);
     User.find().then(result => {
         res.status(200).send(result.reverse());
         console.log('Current user list sent');
@@ -64,7 +64,7 @@ app.delete('/api/users/:id', (req, res) => {
 });
 
 app.get('/api/inventory', (req, res) => {
-    console.log('received GET request for ITEM');
+    console.log('received GET request for ITEM', req.body);
     Item.find().then(result => {
         res.status(200).send(result.reverse());
         console.log('Current item list sent');
@@ -89,7 +89,7 @@ app.post('/api/inventory', (req, res) => {
 });
 
 app.get('/api/procedure', (req, res) => {
-    console.log('received GET request for PROCEDURE');
+    console.log('received GET request for PROCEDURE', req.body);
     Procedure.find().then(result => {
         res.status(200).send(result.reverse());
         console.log('Current procedure template list sent');
@@ -104,7 +104,7 @@ app.post('/api/procedure', (req, res) => {
         items: req.body.items
     });
 
-    item.save((err, procedure) => {
+    procedure.save((err, procedure) => {
         if (err) {
             console.log(err);
         } else {
@@ -115,12 +115,13 @@ app.post('/api/procedure', (req, res) => {
 });
 
 app.get('/api/procedurehistory', (req, res) => {
-    console.log('received GET request for PROCEDUREHISTORY');
+    console.log('received GET request for PROCEDUREHISTORY', req.body);
     ProcedureHistory.find().then(result => {
         res.status(200).send(result.reverse());
         console.log('Current procedure history list sent');
     });
 });
+
 
 app.post('/api/procedureshistory', (req, res) => {
     const ip = req.connection.remoteAddress;

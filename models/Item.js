@@ -15,7 +15,9 @@ const Item = db.model('Item', {
         total: { type: Number }
     },
     parLevel: { type: Number },
-    signature: { type: String }
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now },
+    signature: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
 module.exports = Item;
