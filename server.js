@@ -89,7 +89,7 @@ app.put('/api/users/:id', (req, res) => {
 // DELETE
 app.delete('/api/users/:id', (req, res) => {
   console.log('received DELETE request for USER');
-  User.findByIdAndRemove(req.params.id, (err, user) => {
+  User.findByIdAndRemove(req.params.id, (err) => {
     if (err) {
       console.log(err);
     } else {
@@ -138,16 +138,21 @@ app.post('/api/inventory', (req, res) => {
   });
 });
 
-/* Procedures */
-
-app.get('/api/procedure', (req, res) => {
-  console.log('received GET request for PROCEDURE', req.body);
-  Procedure.find().then(result => {
-    res.status(200).send(result.reverse());
-    console.log('Current procedure template list sent');
+// DELETE
+app.delete('/api/inventory/:id', (req, res) => {
+  console.log('received DELETE request for INVENTORY');
+  Item.findByIdAndRemove(req.params.id, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.status(200).send();
+    }
   });
 });
 
+/* Procedures */
+
+// POST
 app.post('/api/procedure', (req, res) => {
   console.log('Received POST request for PROCEDURE:', req.body);
   let procedure = new Procedure({
@@ -162,6 +167,15 @@ app.post('/api/procedure', (req, res) => {
       console.log(`Procedure created: ${procedure}`);
     }
     res.status(200).send(procedure);
+  });
+});
+
+// GET all
+app.get('/api/procedure', (req, res) => {
+  console.log('received GET request for PROCEDURE', req.body);
+  Procedure.find().then(result => {
+    res.status(200).send(result.reverse());
+    console.log('Current procedure template list sent');
   });
 });
 

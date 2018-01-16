@@ -11,8 +11,7 @@ const Item = db.model('Item', {
     surgery1: { type: Number },
     surgery2: { type: Number },
     surgery3: { type: Number },
-    stock: { type: Number },
-    total: { type: Number }
+    stock: { type: Number }
   },
   parLevel: { type: Number },
   createdAt: { type: Date, default: Date.now },
