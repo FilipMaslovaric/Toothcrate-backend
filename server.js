@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 /* Dev packages */
 const morgan = require('morgan');
@@ -16,7 +17,11 @@ const ProcedureHistory = require('./models/ProcedureHistory');
 
 // Use Express.js for the server, and set server port as variable //
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
+
+// Use CORS to allow 
+
+app.use(cors())
 
 // Use Morgan for pretty HTTP request logging
 app.use(morgan('dev'));
@@ -48,10 +53,11 @@ app.post('/api/users', (req, res) => {
 // GET all
 app.get('/api/users', (req, res) => {
     console.log('received GET request for USER', req.body);
-    User.find().then(result => {
-        res.status(200).send(result.reverse());
-        console.log('Current user list sent');
-    });
+    User.find()
+        .then(result => {
+            res.status(200).send(result.reverse());
+            console.log('Current user list sent');
+        });
 });
 
 // GET one

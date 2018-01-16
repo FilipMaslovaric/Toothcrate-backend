@@ -9,8 +9,8 @@ const Procedure = db.model('Procedure', {
             { procedureQuantity: {type: Number}} 
         ]
     ],
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 
 module.exports = Procedure;

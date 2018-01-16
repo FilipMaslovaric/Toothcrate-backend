@@ -6,6 +6,7 @@
     "mongoose": "^4.13.7"
   },
   "devDependencies": {
+    "cors": "^2.8.4",
     "morgan": "^1.9.0"
   },
   "scripts": {

@@ -15,8 +15,8 @@ const Item = db.model('Item', {
         total: { type: Number }
     },
     parLevel: { type: Number },
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
     signature: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
