@@ -26,16 +26,10 @@ app.use(bodyParser.json());
 
 /* Endpoints */
 
-app.get('/api/users', (req, res) => {
-    console.log('received GET request for USER', req.body);
-    User.find().then(result => {
-        res.status(200).send(result.reverse());
-        console.log('Current user list sent');
-    });
-});
+/* Users */
 
+// POST
 app.post('/api/users', (req, res) => {
-    const ip = req.connection.remoteAddress;
     console.log('Received POST request for USER', req.body);
     let user = new User({
         name: req.body.name
@@ -51,6 +45,44 @@ app.post('/api/users', (req, res) => {
     });
 });
 
+// GET all
+app.get('/api/users', (req, res) => {
+    console.log('received GET request for USER', req.body);
+    User.find().then(result => {
+        res.status(200).send(result.reverse());
+        console.log('Current user list sent');
+    });
+});
+
+// GET one
+app.get('/api/users/:id', (req, res) => {
+    console.log('Received GET(one) request for USER', req.body);
+    User.findOne({ _id: req.params.id }, (err, user) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.status(200).send(user);
+        };
+    });
+})
+
+// UPDATE
+app.put('/api/users/:id', (req, res) => {
+    console.log('Received UPDATE request for USER');
+    User.findOneAndUpdate(
+        { _id: req.params.id }, 
+        { $set: { name: req.body.name, updated_at: Date.now() } }, 
+        { new: true }
+    )
+        .then((user) => {
+            res.status(200).send(user);
+        })
+        .catch((err) => {
+            res.status(500).send(err);
+        })
+})
+
+// DELETE
 app.delete('/api/users/:id', (req, res) => {
     console.log('received DELETE request for USER');
     User.findByIdAndRemove(req.params.id, (err, user) => {
@@ -63,16 +95,31 @@ app.delete('/api/users/:id', (req, res) => {
     });
 });
 
+/* Items */
+
+// GET all
 app.get('/api/inventory', (req, res) => {
-    console.log('received GET request for ITEM', req.body);
+    console.log('received GET request for ITEM');
     Item.find().then(result => {
-        res.status(200).send(result.reverse());
+        res.send(result.reverse());
         console.log('Current item list sent');
     });
 });
 
+// GET one
+app.get('/api/inventory/:id', (req, res) => {
+    console.log('Received GET(one) request for ITEM', req.body);
+    Item.findOne({ _id: req.params.id }, (err, item) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.status(200).send(item);
+        };
+    });
+})
+
+// POST
 app.post('/api/inventory', (req, res) => {
-    const ip = req.connection.remoteAddress;
     console.log('Received POST request for ITEM:', req.body);
     let item = new Item({
         name: req.body.name
@@ -88,6 +135,8 @@ app.post('/api/inventory', (req, res) => {
     });
 });
 
+/* Procedures */
+
 app.get('/api/procedure', (req, res) => {
     console.log('received GET request for PROCEDURE', req.body);
     Procedure.find().then(result => {
@@ -97,7 +146,6 @@ app.get('/api/procedure', (req, res) => {
 });
 
 app.post('/api/procedure', (req, res) => {
-    const ip = req.connection.remoteAddress;
     console.log('Received POST request for PROCEDURE:', req.body);
     let procedure = new Procedure({
         name: req.body.name,
@@ -114,6 +162,8 @@ app.post('/api/procedure', (req, res) => {
     });
 });
 
+/* Procedure History */
+
 app.get('/api/procedurehistory', (req, res) => {
     console.log('received GET request for PROCEDUREHISTORY', req.body);
     ProcedureHistory.find().then(result => {
@@ -124,14 +174,14 @@ app.get('/api/procedurehistory', (req, res) => {
 
 
 app.post('/api/procedureshistory', (req, res) => {
-    const ip = req.connection.remoteAddress;
     console.log('Received POST request for PROCEDUREHISTORY', req.body);
     let procedureHistory = new ProcedureHistory({
         procedure: req.body.procedure,
         dentist: req.body.dentist,
-        location: req.body.location
+        location: req.body.location,
+        updated_at: Date.now
     });
-
+    console.log('Creating this thing...:', procedureHistory)
     procedureHistory.save((err, procedureHistory) => {
         if (err) {
             console.log(err);
