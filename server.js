@@ -1,11 +1,9 @@
 /* Required packages */
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-
-/* Dev packages */
 const morgan = require('morgan');
 
 /* Models */
@@ -18,8 +16,7 @@ const ProcedureHistory = require('./models/ProcedureHistory');
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Use CORS to allow
-
+// Use CORS
 app.use(cors());
 
 // Use Morgan for pretty HTTP request logging
@@ -35,44 +32,58 @@ app.use(bodyParser.json());
 // POST
 app.post('/api/users', (req, res) => {
   console.log('Received POST request for USER', req.body);
+
+  // Create a new instance of User, use passed in information from front-end
   let user = new User({
     name: req.body.name
   });
 
-  user.save((err, user) => {
-    if (err) {
-      console.log(err);
-    } else {
+  // Save new User and send back response
+  user.save()
+    .then(result => {
+      res.status(200).send(user);
       console.log(`User created: ${user}`);
-    }
-    res.status(200).send(user);
-  });
+    })
+    .catch(err => {
+      console.log(err);
+    })
 });
 
 // GET all
 app.get('/api/users', (req, res) => {
   console.log('received GET request for USER', req.body);
-  User.find().then(result => {
-    res.status(200).send(result.reverse());
-    console.log('Current user list sent');
-  });
+
+  User.find()
+      .then(result => {
+        res.status(200).send(result.reverse());
+        console.log('Current user list sent:', result);
+      })
+      .catch(err => {
+        res.status(500).send(err);
+        console.log('An error ocurred:', err);
+      })
 });
 
 // GET one
 app.get('/api/users/:id', (req, res) => {
   console.log('Received GET(one) request for USER', req.body);
-  User.findOne({ _id: req.params.id }, (err, user) => {
+
+  User.findOne({ _id: req.params.id }, (err) => {
     if (err) {
       console.log(err);
-    } else {
-      res.status(200).send(user);
-    }
-  });
+    }})
+      .then(result => {
+        res.status(200).send(user);
+      })
+      .catch(err => {
+        res.status(500).send(err);
+      });
 });
 
 // UPDATE
 app.put('/api/users/:id', (req, res) => {
   console.log('Received UPDATE request for USER');
+
   User.findOneAndUpdate(
     { _id: req.params.id },
     { $set: { name: req.body.name, updated_at: Date.now() } },
@@ -89,16 +100,35 @@ app.put('/api/users/:id', (req, res) => {
 // DELETE
 app.delete('/api/users/:id', (req, res) => {
   console.log('received DELETE request for USER');
-  User.findByIdAndRemove(req.params.id, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.status(200).send();
-    }
-  });
+
+  User.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(200).send(`User ${req.params.id} deleted...`);
+      console.log(`User ${req.params.id} deleted...`)
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
 });
 
 /* Items */
+
+// POST
+app.post('/api/inventory', (req, res) => {
+  console.log('Received POST request for ITEM:', req.body);
+  let item = new Item({
+    name: req.body.name
+  });
+
+  item.save((err, item) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`Item created: ${item}`);
+    }
+    res.status(200).send(item);
+  });
+});
 
 // GET all
 app.get('/api/inventory', (req, res) => {
@@ -118,23 +148,6 @@ app.get('/api/inventory/:id', (req, res) => {
     } else {
       res.status(200).send(item);
     }
-  });
-});
-
-// POST
-app.post('/api/inventory', (req, res) => {
-  console.log('Received POST request for ITEM:', req.body);
-  let item = new Item({
-    name: req.body.name
-  });
-
-  item.save((err, item) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(`Item created: ${item}`);
-    }
-    res.status(200).send(item);
   });
 });
 

@@ -7,7 +7,6 @@
     "mongoose": "^4.13.7",
     "morgan": "^1.9.0"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
