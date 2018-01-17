@@ -10,10 +10,6 @@ const db = mongoose.connect(process.env.DB_ADDRESS, {
 
 });
 
-// const db = mongoose.connect('mongodb://localhost/toothcrate-db', {
-//   useMongoClient: true
-// });
-
 mongoose.Promise = Promise;
 
 module.exports = { mongoose, db };
