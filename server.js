@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const passportLocalMongoose = require('passport-local-mongoose');
 const morgan = require('morgan');
 
 /* Models */
