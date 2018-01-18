@@ -29,20 +29,20 @@ app.use(bodyParser.json());
 /* Endpoints */
 
 /* Users */
-app.get('/admin', requireJWT, verifyAdmin, (req, res) => {
-  res.status(200).send('hello admin');
-});
-
-// JSON error handling
-app.use((error, req, res, next) => {
-  res.status(500).send({ error: error.message });
-});
-app.use((req, res, next) => {
-  // No other routes left, must be a 404!
-  res.status(404).send({
-    error: `No route found for ${req.method} ${req.url}`
-  });
-});
+// app.get('/admin', requireJWT, verifyAdmin, (req, res) => {
+//   res.status(200).send('hello admin');
+// });
+//
+// // JSON error handling
+// app.use((error, req, res, next) => {
+//   res.status(500).send({ error: error.message });
+// });
+// app.use((req, res, next) => {
+//   // No other routes left, must be a 404!
+//   res.status(404).send({
+//     error: `No route found for ${req.method} ${req.url}`
+//   });
+// });
 
 // POST
 app.post('/api/users', (req, res) => {
