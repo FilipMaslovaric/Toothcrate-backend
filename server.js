@@ -48,7 +48,7 @@ app.post('/api/users', (req, res) => {
 
 // GET all
 app.get('/api/users', (req, res) => {
-  console.log('received GET request for USER', req.body);
+  console.log('Received GET request for USER', req.body);
 
   User.find()
       .then(result => {
@@ -80,25 +80,24 @@ app.get('/api/users/:id', (req, res) => {
 app.put('/api/users/:id', (req, res) => {
   console.log('Received UPDATE request for USER');
 
-  User.findOne({ _id: req.params.id })
+  User.findOneAndUpdate(
+    { _id: req.params.id },
+    { $set: Object.assign(req.body, { updatedAt: Date.now() }) },
+    { new: true }
+  )
     .then(user => {
-      for (prop in req.body) {
-        user[prop] = req.body[prop];
-      };
-      user.save();
       res.status(200).send(user);
       console.log('Updated user: ', user);
     })
     .catch(err => {
       res.status(500).send('Error ocurred while trying to update user');
       console.log('Error ocurred while trying to update user: ', err);
-    })
-  })
-
+    });
+});
 
 // DELETE
 app.delete('/api/users/:id', (req, res) => {
-  console.log('received DELETE request for USER');
+  console.log('Received DELETE request for USER');
 
   User.findByIdAndRemove(req.params.id)
     .then(user => {
@@ -164,18 +163,14 @@ app.get('/api/inventory/:id', (req, res) => {
 app.put('/api/inventory/:id', (req, res) => {
   console.log('Received UPDATE request for ITEM');
 
-  Item.findOne({ _id: req.params.id })
+  Item.findOneAndUpdate(
+    { _id: req.params.id },
+    { $set: Object.assign(req.body, { updatedAt: Date.now() }) },
+    { new: true }
+  )
     .then(item => {
-      for (let field in Item.schema.paths) {
-        if ((field !== '_id') && (field !== '__v')) {
-          if (req.body[field] !== undefined) {
-            book[field] = req.body[field];
-          }
-        }
-      }
-      item.save();
       res.status(200).send(item);
-      console.log('Updated item: ', item); 
+      console.log('Updated item: ', item);
     })
     .catch(err => {
       res.status(500).send('Error ocurred while trying to update item');
@@ -185,7 +180,7 @@ app.put('/api/inventory/:id', (req, res) => {
 
 // DELETE
 app.delete('/api/inventory/:id', (req, res) => {
-  console.log('received DELETE request for INVENTORY');
+  console.log('Received DELETE request for INVENTORY');
   Item.findByIdAndRemove(req.params.id)
     .then(result => {
       res.status(200).send('Item deleted successfully');
@@ -203,10 +198,7 @@ app.delete('/api/inventory/:id', (req, res) => {
 app.post('/api/procedure', (req, res) => {
   console.log('Received POST request for PROCEDURE:', req.body);
 
-  let procedure = new Procedure({
-    name: req.body.name,
-    items: req.body.items
-  });
+  let procedure = new Procedure(req.body);
 
   procedure.save()
     .then(procedure => {
@@ -220,7 +212,7 @@ app.post('/api/procedure', (req, res) => {
 
 // GET all
 app.get('/api/procedure', (req, res) => {
-  console.log('received GET request for PROCEDURE', req.body);
+  console.log('Received GET request for PROCEDURE', req.body);
 
   Procedure.find()
     .then(result => {
@@ -233,18 +225,62 @@ app.get('/api/procedure', (req, res) => {
     })
 });
 
+// GET one
+app.get('/api/procedure/:id', (req, res) => {
+  console.log('Received GET(one) request for PROCEDURE', req.body);
+
+  Procedure.findOne({ _id: req.params.id })
+    .then(procedure => {
+      res.status(200).send(procedure);
+      console.log('Sent back item successfully: ', procedure);
+    })
+    .catch(err => {
+      res.status(500).send('An error ocurred while getting one procedure');
+      console.log('An error ocurred while getting one procedure: ', err);
+    })
+});
+
+// UPDATE
+app.put('/api/procedure/:id', (req, res) => {
+  console.log('Received UPDATE request for PROCEDURE');
+
+  Procedure.findOneAndUpdate(
+    { _id: req.params.id },
+    { $set: Object.assign(req.body, { updatedAt: Date.now() }) },
+    { new: true }
+  )
+    .then(procedure => {
+      res.status(200).send(procedure);
+      console.log('Updated item: ', procedure);
+    })
+    .catch(err => {
+      res.status(500).send('Error ocurred while trying to update procedure');
+      console.log('Error ocurred while trying to update procedure: ', err);
+    });
+});
+
+// DELETE
+app.delete('/api/procedure/:id', (req, res) => {
+  console.log('Received DELETE request for PROCEDURE');
+
+  Procedure.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(200).send('Procedure deleted successfully', result);
+      console.log(`Procedure ${req.params.id} deleted successfully: `, result);
+    })
+    .catch(err => {
+      res.status(500).send('Error ocurred while trying to delete procedure');
+      console.log('Error ocurred while trying to delete procedure: ', err);
+    })
+});
+
 /* Procedure History */
 
 // POST
 app.post('/api/procedureshistory', (req, res) => {
   console.log('Received POST request for PROCEDUREHISTORY', req.body);
 
-  let procedureHistory = new ProcedureHistory({
-    procedure: req.body.procedure,
-    dentist: req.body.dentist,
-    location: req.body.location,
-    updated_at: Date.now
-  });
+  let procedureHistory = new ProcedureHistory(req.body);
 
   procedureHistory.save()
     .then(procedureHistory => {
@@ -259,7 +295,7 @@ app.post('/api/procedureshistory', (req, res) => {
 
 // GET all
 app.get('/api/procedurehistory', (req, res) => {
-  console.log('received GET request for PROCEDUREHISTORY', req.body);
+  console.log('Received GET request for PROCEDUREHISTORY', req.body);
 
   ProcedureHistory.find()
     .then(result => {
@@ -274,7 +310,7 @@ app.get('/api/procedurehistory', (req, res) => {
 
 // GET one
 app.get('/api/procedurehistory/:id', (req, res) => {
-  console.log('received GET request for PROCEDUREHISTORY', req.body);
+  console.log('Received GET request for PROCEDUREHISTORY', req.body);
 
   ProcedureHistory.findOne({ _id: req.params.id })
     .then(procedureHistory => {
@@ -297,9 +333,28 @@ app.get('/api/procedurehistory/:id', (req, res) => {
     })
 });
 
+// UPDATE
+app.put('/api/procedurehistory/:id', (req, res) => {
+  console.log('Received UPDATE request for PROCEDUREHISTORY');
+
+  ProcedureHistory.findOneAndUpdate(
+    { _id: req.params.id },
+    { $set: Object.assign(req.body, { updatedAt: Date.now() }) },
+    { new: true }
+  )
+    .then(procedureHistory => {
+      res.status(200).send(procedureHistory);
+      console.log('Updated item: ', procedureHistory);
+    })
+    .catch(err => {
+      res.status(500).send('Error ocurred while trying to update procedure history entry');
+      console.log('Error ocurred while trying to update procedure history entry: ', err);
+    });
+});
+
 // DELETE
 app.delete('/api/procedurehistory/:id', (req, res) => {
-  console.log('received DELETE request for PROCEDUREHISTORY');
+  console.log('Received DELETE request for PROCEDUREHISTORY');
 
   ProcedureHistory.findByIdAndRemove(req.params.id)
     .then(result => {
