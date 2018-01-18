@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const passportLocalMongoose = require('passport-local-mongoose');
 
 /* Dev packages */
 const morgan = require('morgan');
@@ -89,7 +90,7 @@ app.put('/api/users/:id', (req, res) => {
 // DELETE
 app.delete('/api/users/:id', (req, res) => {
   console.log('received DELETE request for USER');
-  User.findByIdAndRemove(req.params.id, (err) => {
+  User.findByIdAndRemove(req.params.id, err => {
     if (err) {
       console.log(err);
     } else {
@@ -141,7 +142,7 @@ app.post('/api/inventory', (req, res) => {
 // DELETE
 app.delete('/api/inventory/:id', (req, res) => {
   console.log('received DELETE request for INVENTORY');
-  Item.findByIdAndRemove(req.params.id, (err) => {
+  Item.findByIdAndRemove(req.params.id, err => {
     if (err) {
       console.log(err);
     } else {

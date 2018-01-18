@@ -1,5 +1,6 @@
 const { mongoose, db } = require('../database');
 const Schema = mongoose.Schema;
+const passportLocalsMongoose = require('passport-local-mongoose');
 
 const User = db.model('User', {
   name: { type: String },
