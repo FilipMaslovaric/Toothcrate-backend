@@ -29,6 +29,20 @@ app.use(bodyParser.json());
 /* Endpoints */
 
 /* Users */
+app.get('/admin', requireJWT, verifyAdmin, (req, res) => {
+  res.status(200).send('hello admin');
+});
+
+// JSON error handling
+app.use((error, req, res, next) => {
+  res.status(500).send({ error: error.message });
+});
+app.use((req, res, next) => {
+  // No other routes left, must be a 404!
+  res.status(404).send({
+    error: `No route found for ${req.method} ${req.url}`
+  });
+});
 
 // POST
 app.post('/api/users', (req, res) => {
@@ -36,15 +50,18 @@ app.post('/api/users', (req, res) => {
 
   let user = new User(req.body);
 
-  user.save()
+  user
+    .save()
     .then(user => {
       res.status(200).send(user);
       console.log(`User created: ${user}`);
     })
     .catch(err => {
-      res.status(500).send('An error ocurred while trying to create a new user')
+      res
+        .status(500)
+        .send('An error ocurred while trying to create a new user');
       console.log('An error ocurred while trying to create new user: ', err);
-    })
+    });
 });
 
 // GET all
@@ -52,14 +69,14 @@ app.get('/api/users', (req, res) => {
   console.log('Received GET request for USER', req.body);
 
   User.find()
-      .then(result => {
-        res.status(200).send(result.reverse());
-        console.log('Current user list sent: ', result);
-      })
-      .catch(err => {
-        res.status(500).send('An error ocurred while trying to get all users');
-        console.log('An error ocurred while trying to get all users: ', err);
-      })
+    .then(result => {
+      res.status(200).send(result.reverse());
+      console.log('Current user list sent: ', result);
+    })
+    .catch(err => {
+      res.status(500).send('An error ocurred while trying to get all users');
+      console.log('An error ocurred while trying to get all users: ', err);
+    });
 });
 
 // GET one
@@ -67,14 +84,14 @@ app.get('/api/users/:id', (req, res) => {
   console.log('Received GET(one) request for USER', req.body);
 
   User.findOne({ _id: req.params.id })
-      .then(result => {
-        res.status(200).send(user);
-        console.log('Sent back requested user: ', user);
-      })
-      .catch(err => {
-        res.status(500).send('Error ocurred while trying to retrieve user');
-        console.log('Error ocurred while trying to send user: ', err);
-      });
+    .then(result => {
+      res.status(200).send(user);
+      console.log('Sent back requested user: ', user);
+    })
+    .catch(err => {
+      res.status(500).send('Error ocurred while trying to retrieve user');
+      console.log('Error ocurred while trying to send user: ', err);
+    });
 });
 
 // UPDATE
@@ -108,7 +125,7 @@ app.delete('/api/users/:id', (req, res) => {
     .catch(err => {
       res.status(500).send('Error ocurred while trying to delete user');
       console.log('Error ocurred while trying to delete user: ', err);
-    })
+    });
 });
 
 /* Items */
@@ -119,15 +136,16 @@ app.post('/api/inventory', (req, res) => {
 
   let item = new Item(req.body);
 
-  item.save()
+  item
+    .save()
     .then(result => {
       res.status(200).send(result);
-      console.log(result)
+      console.log(result);
     })
     .catch(err => {
-      res.status(500).send('Something went wrong')
-      console.log(err)
-    })
+      res.status(500).send('Something went wrong');
+      console.log(err);
+    });
 });
 
 // GET all
@@ -141,8 +159,8 @@ app.get('/api/inventory', (req, res) => {
     })
     .catch(err => {
       res.status(500).send('An error ocurred while getting list of all items');
-      console.log('An error ocurred while getting list of all items: ', err); 
-    })
+      console.log('An error ocurred while getting list of all items: ', err);
+    });
 });
 
 // GET one
@@ -157,7 +175,7 @@ app.get('/api/inventory/:id', (req, res) => {
     .catch(err => {
       res.status(500).send('An error ocurred while getting one item');
       console.log('An error ocurred while getting one item: ', err);
-    })
+    });
 });
 
 // UPDATE
@@ -190,7 +208,7 @@ app.delete('/api/inventory/:id', (req, res) => {
     .catch(err => {
       res.status(500).send('Error ocurred while trying to delete item');
       console.log('Error ocurred while trying to delete item: ', err);
-    })
+    });
 });
 
 /* Procedures */
@@ -201,14 +219,16 @@ app.post('/api/procedure', (req, res) => {
 
   let procedure = new Procedure(req.body);
 
-  procedure.save()
+  procedure
+    .save()
     .then(procedure => {
       res.status(200).send(procedure);
       console.log(`Procedure created: ${procedure}`);
-    }).catch(err => {
+    })
+    .catch(err => {
       res.status(500).send('An error ocurred while creating a procedure');
       console.log('An error ocurred while creating a procedure: ', err);
-    })
+    });
 });
 
 // GET all
@@ -222,8 +242,8 @@ app.get('/api/procedure', (req, res) => {
     })
     .catch(err => {
       res.status(500).send('An error ocurred while getting all procedures');
-      console.log('An error ocurred while getting all procedures: ', err)
-    })
+      console.log('An error ocurred while getting all procedures: ', err);
+    });
 });
 
 // GET one
@@ -238,7 +258,7 @@ app.get('/api/procedure/:id', (req, res) => {
     .catch(err => {
       res.status(500).send('An error ocurred while getting one procedure');
       console.log('An error ocurred while getting one procedure: ', err);
-    })
+    });
 });
 
 // UPDATE
@@ -272,7 +292,7 @@ app.delete('/api/procedure/:id', (req, res) => {
     .catch(err => {
       res.status(500).send('Error ocurred while trying to delete procedure');
       console.log('Error ocurred while trying to delete procedure: ', err);
-    })
+    });
 });
 
 /* Procedure History */
@@ -283,15 +303,21 @@ app.post('/api/procedureshistory', (req, res) => {
 
   let procedureHistory = new ProcedureHistory(req.body);
 
-  procedureHistory.save()
+  procedureHistory
+    .save()
     .then(procedureHistory => {
       res.status(200).send(procedureHistory);
       console.log('Procedure logged successfully: ', procedureHistory);
     })
     .catch(err => {
-      res.status(500).send('An error ocurred while logging a new procedure in the history');
-      console.log('An error ocurred while logging a new procedure in the history: ', err)
-    })
+      res
+        .status(500)
+        .send('An error ocurred while logging a new procedure in the history');
+      console.log(
+        'An error ocurred while logging a new procedure in the history: ',
+        err
+      );
+    });
 });
 
 // GET all
@@ -304,9 +330,14 @@ app.get('/api/procedurehistory', (req, res) => {
       console.log('Current procedure history list sent');
     })
     .catch(err => {
-      res.status(500).send('An error ocurred while getting history of all procedures');
-      console.log('An error ocurred while getting history of all procedures: ', err);
-    })
+      res
+        .status(500)
+        .send('An error ocurred while getting history of all procedures');
+      console.log(
+        'An error ocurred while getting history of all procedures: ',
+        err
+      );
+    });
 });
 
 // GET one
@@ -315,13 +346,18 @@ app.get('/api/procedurehistory/:id', (req, res) => {
 
   ProcedureHistory.findOne({ _id: req.params.id })
     .then(procedureHistory => {
-      res.status(200).send(procedureHistory)
-      console.log('Sent back item successfully:', procedureHistory)
+      res.status(200).send(procedureHistory);
+      console.log('Sent back item successfully:', procedureHistory);
     })
     .catch(err => {
-      res.status(500).send('An error ocurred while getting one procedure history entry');
-      console.log('An error ocurred while getting one procedure history entry: ', err)
-    })
+      res
+        .status(500)
+        .send('An error ocurred while getting one procedure history entry');
+      console.log(
+        'An error ocurred while getting one procedure history entry: ',
+        err
+      );
+    });
 
   ProcedureHistory.find()
     .then(result => {
@@ -329,9 +365,14 @@ app.get('/api/procedurehistory/:id', (req, res) => {
       console.log('Current procedure history list sent');
     })
     .catch(err => {
-      res.status(500).send('An error ocurred while getting history of all procedures');
-      console.log('An error ocurred while getting history of all procedures: ', err);
-    })
+      res
+        .status(500)
+        .send('An error ocurred while getting history of all procedures');
+      console.log(
+        'An error ocurred while getting history of all procedures: ',
+        err
+      );
+    });
 });
 
 // UPDATE
@@ -348,8 +389,13 @@ app.put('/api/procedurehistory/:id', (req, res) => {
       console.log('Updated item: ', procedureHistory);
     })
     .catch(err => {
-      res.status(500).send('Error ocurred while trying to update procedure history entry');
-      console.log('Error ocurred while trying to update procedure history entry: ', err);
+      res
+        .status(500)
+        .send('Error ocurred while trying to update procedure history entry');
+      console.log(
+        'Error ocurred while trying to update procedure history entry: ',
+        err
+      );
     });
 });
 
@@ -359,13 +405,23 @@ app.delete('/api/procedurehistory/:id', (req, res) => {
 
   ProcedureHistory.findByIdAndRemove(req.params.id)
     .then(result => {
-      res.status(200).send('Procedure history entry deleted successfully', result);
-      console.log(`Procedure history entry ${req.params.id} deleted successfully: `, result);
+      res
+        .status(200)
+        .send('Procedure history entry deleted successfully', result);
+      console.log(
+        `Procedure history entry ${req.params.id} deleted successfully: `,
+        result
+      );
     })
     .catch(err => {
-      res.status(500).send('Error ocurred while trying to delete procedure history entry');
-      console.log('Error ocurred while trying to delete procedure history entry: ', err);
-    })
+      res
+        .status(500)
+        .send('Error ocurred while trying to delete procedure history entry');
+      console.log(
+        'Error ocurred while trying to delete procedure history entry: ',
+        err
+      );
+    });
 });
 
 app.listen(port, () =>
