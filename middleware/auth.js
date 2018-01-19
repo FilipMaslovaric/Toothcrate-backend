@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const jwtSecret = process.env.JWT_SECRET;
 const jwtAlgorithm = 'HS256';
-const jwtExpiresIn = '6h';
+const jwtExpiresIn = '7d';
 
 passport.use(User.createStrategy());
 
