@@ -255,42 +255,48 @@ router.put('/procedure/:id', (req, res) => {
 
 // DELETE
 router.delete('/procedure/:id', (req, res) => {
-  console.log('Received DELETE request for PROCEDURE');
+    console.log('Received DELETE request for PROCEDURE');
 
-  Procedure.findByIdAndRemove(req.params.id)
-    .then(result => {
-      res.status(200).send('Procedure deleted successfully', result);
-      console.log(`Procedure ${req.params.id} deleted successfully: `, result);
-    })
-    .catch(err => {
-      res.status(500).send('Error ocurred while trying to delete procedure');
-      console.log('Error ocurred while trying to delete procedure: ', err);
-    });
+    Procedure
+        .findByIdAndRemove(req.params.id)
+        .then(result => {
+            res.status(200).send('Procedure deleted successfully');
+            console.log(`Procedure ${req.params.id} deleted successfully: `, result);
+        })
+        .catch(err => {
+            res.status(500).send('Error ocurred while trying to delete procedure');
+            console.log('Error ocurred while trying to delete procedure: ', err);
+        });
 });
 
 /* Procedure History */
 
 // POST
-router.post('/procedureshistory', (req, res) => {
-  console.log('Received POST request for PROCEDUREHISTORY', req.body);
+router.post('/procedurehistory', (req, res) => {
+    console.log('Received POST request for PROCEDUREHISTORY', req.body);
 
-  let procedureHistory = new ProcedureHistory(req.body);
+    let procedureHistory = new ProcedureHistory(req.body);
 
-  procedureHistory
-    .save()
-    .then(procedureHistory => {
-      res.status(200).send(procedureHistory);
-      console.log('Procedure logged successfully: ', procedureHistory);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .send('An error ocurred while logging a new procedure in the history');
-      console.log(
-        'An error ocurred while logging a new procedure in the history: ',
-        err
-      );
-    });
+     Procedure.findById(req.body.procedure)
+      .then(procedure => {
+        return Promise.all(procedure.items.map(item => Item.findById(item.item)))
+          .then(items => {
+            items.forEach(item => {
+              const procedureItem = procedure.items.find(i => i.item.equals(item._id))
+              item.quantity.stock = item.quantity.stock - procedureItem.useQuantity
+            });
+            return Promise.all(items.map(item => item.save()))
+          })
+            .then(() => procedureHistory.save())
+            .then(() => {
+              res.status(200).send(procedureHistory);
+              console.log('Items successfully subtracted from database:', procedureHistory);
+            });
+      })
+        .catch(err => {
+          res.status(500).send('An error ocurred while trying to save the procedure history entry and changing inventory items');
+          console.log('An error ocurred while saving procedure history and changing item levels in stock: ', err);
+        });
 });
 
 // GET all
@@ -343,30 +349,6 @@ router.get('/procedurehistory/:id', (req, res) => {
         .send('An error ocurred while getting history of all procedures');
       console.log(
         'An error ocurred while getting history of all procedures: ',
-        err
-      );
-    });
-});
-
-// UPDATE
-router.put('/procedurehistory/:id', (req, res) => {
-  console.log('Received UPDATE request for PROCEDUREHISTORY');
-
-  ProcedureHistory.findOneAndUpdate(
-    { _id: req.params.id },
-    { $set: Object.assign(req.body, { updatedAt: Date.now() }) },
-    { new: true }
-  )
-    .then(procedureHistory => {
-      res.status(200).send(procedureHistory);
-      console.log('Updated item: ', procedureHistory);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .send('Error ocurred while trying to update procedure history entry');
-      console.log(
-        'Error ocurred while trying to update procedure history entry: ',
         err
       );
     });
