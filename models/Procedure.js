@@ -5,7 +5,7 @@ const Procedure = db.model('Procedure', {
   name: { type: String },
   items: [{
     item:  { type: Schema.Types.ObjectId, ref: 'Item' },
-    quantity: { type: Number }
+    useQuantity: { type: Number }
   }],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
