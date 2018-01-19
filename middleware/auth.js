@@ -12,9 +12,10 @@ passport.use(User.createStrategy());
 const register = (req, res, next) => {
   // Make a new user
   const user = new User({
+    email: req.body.email,
     name: req.body.name
   });
-
+  console.log(req.body);
   // Register the user with their specified password
   User.register(user, req.body.password, (error, user) => {
     if (error) {

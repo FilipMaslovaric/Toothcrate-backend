@@ -7,11 +7,14 @@ const cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
 const api = require('./routes/api');
+const auth = require('./routes/auth');
+
 // Database
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // Authorization
 const passportLocalMongoose = require('passport-local-mongoose');
+const { initialize, requireJWT, verifyAdmin } = require('./middleware/auth');
 
 // Use Express.js for the server, and set server port as variable //
 const app = express();
@@ -27,7 +30,8 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 // Load routes from route folder
-app.use('/api', api)
+app.use('/api', requireJWT, api);
+app.use('/auth', auth);
 
 // Start server and listen on assigned port for connections
 app.listen(port, () =>

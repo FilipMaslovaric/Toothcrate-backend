@@ -3,10 +3,10 @@ const { register, signJWTForUser, signIn } = require('../middleware/auth');
 
 const router = new express.Router();
 
-// Registration
-router.post('/auth/register', register, signJWTForUser);
+// Only turn on if new Registration required!
+// router.post('/register', register, signJWTForUser);
 
 // Sign In
-router.post('/auth', signIn, signJWTForUser);
+router.post('/', signIn, signJWTForUser);
 
 module.exports = router;
