@@ -1,4 +1,4 @@
-# Toothcrate-backend Coder Academy Term 3 Major Project -
+# Toothcrate-backend Coder Academy Term 3 Project -
 
 ### Backend half (server, API, database) for a dental practice inventory system.
 
@@ -8,7 +8,19 @@
   solve with an application and present your ideas to the client.
 
 * Please see [this repo](https://github.com/DeadFred121/toothcrate-front) for a
-  detailed README file. [Project Link](http://toothcrate.herokuapp.com)
-  [Project Link](http://toothcrate.netlify.com)
-  ## Tech Stack
-  ![tech stack](./documentation/node_mongo.png)
+  detailed README file. [Project Link](http://toothcrate.netlify.com)
+
+### Tech Stack
+
+![tech stack](./documentation/node_mongo.png)
+
+### Installation
+
+You can access the application through heroku: https://toothcrate.herokuapp.com
+Or you can download the project to the local drive and run it from there:
+
+Clone the server side repo:
+
+```
+$ git clone https://github.com/FilipMaslovaric/Toothcrate-backend
+```
