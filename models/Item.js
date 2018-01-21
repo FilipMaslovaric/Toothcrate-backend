@@ -1,7 +1,7 @@
 const { mongoose, db } = require('../database');
 const Schema = mongoose.Schema;
 
-const Item = db.model('Item', {
+const itemSchema = new Schema({
   name: { type: String },
   code: { type: String },
   category: { type: String },
@@ -10,9 +10,12 @@ const Item = db.model('Item', {
   unit: { type: String },
   quantity: { type: Number },
   parLevel: { type: Number },
-  signature: { type: Schema.Types.ObjectId, ref: 'User' },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date }
+  signature: { type: Schema.Types.ObjectId, ref: 'User' }
+},
+{
+  timestamps: true
 });
+
+const Item = db.model('Item', itemSchema);
 
 module.exports = Item;
