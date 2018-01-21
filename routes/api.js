@@ -283,7 +283,7 @@ router.post('/procedurehistory', (req, res) => {
           .then(items => {
             items.forEach(item => {
               const procedureItem = procedure.items.find(i => i.item.equals(item._id))
-              item.quantity.stock = item.quantity.stock - procedureItem.useQuantity
+              item.quantity = item.quantity - procedureItem.useQuantity
             });
             return Promise.all(items.map(item => item.save()))
           })
@@ -362,7 +362,7 @@ router.delete('/procedurehistory/:id', (req, res) => {
     .then(result => {
       res
         .status(200)
-        .send('Procedure history entry deleted successfully', result);
+        .send('Procedure history entry deleted successfully');
       console.log(
         `Procedure history entry ${req.params.id} deleted successfully: `,
         result

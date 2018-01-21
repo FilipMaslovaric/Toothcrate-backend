@@ -30,8 +30,8 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 // Load routes from route folder
-// app.use('/api', requireJWT, api); <----- Turn on for authentication!!
-app.use('/api', api);
+app.use('/api', requireJWT, api);
+// app.use('/api', api);
 
 app.use('/auth', auth);
 
