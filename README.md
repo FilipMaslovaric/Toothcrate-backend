@@ -14,13 +14,52 @@
 
 ![tech stack](./documentation/node_mongo.png)
 
+## Getting Started
+
 ### Installation
 
-You can access the application through heroku: https://toothcrate.herokuapp.com
-Or you can download the project to the local drive and run it from there:
+* The database is hosting on mlab and the server hosted through heroku:
+  https://toothcrate.herokuapp.com/api/inventory
+* Or you can download the project to the local drive and run it from there:
 
 Clone the server side repo:
 
 ```
 $ git clone https://github.com/FilipMaslovaric/Toothcrate-backend
 ```
+
+Change into the project directory, and install the dependencies:
+
+```
+$ yarn install
+```
+
+If you have mongodb installed start it your local machine:
+
+```
+$ mongod
+```
+
+Create a `.env` file and fill in the following keys with your database values.
+Email me for the details and a key for your JWT without quotes:
+
+```
+DB_ADDRESS=<database value here>
+JWTSECRET=<secret phrase here>
+```
+
+Run the backend server on localhost:3001 by running:
+
+```
+yarn start
+```
+
+Then
+
+#### Open application
+
+```
+Navigate to localhost:3001 in your web browser
+```
+
+Signup and navigate away...
