@@ -3,9 +3,7 @@ const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = new Schema({
-  name: { type: String },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date }
+  name: { type: String }
 },
 {
   timestamps: true
