@@ -34,6 +34,10 @@ Change into the project directory, and install the dependencies:
 $ yarn install
 ```
 
+```
+$ yarn run dev
+```
+
 If you have mongodb installed start it your local machine:
 
 ```
