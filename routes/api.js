@@ -125,6 +125,7 @@ router.get('/inventory', (req, res) => {
   console.log('received GET request for ITEM');
 
   Item.find()
+    .populate('signature')
     .then(result => {
       res.status(200).send(result.reverse());
       console.log('Current item list sent');
@@ -140,6 +141,7 @@ router.get('/inventory/:id', (req, res) => {
   console.log('Received GET(one) request for ITEM', req.body);
 
   Item.findOne({ _id: req.params.id })
+    .populate('signature')
     .then(item => {
       res.status(200).send(item);
       console.log('Sent back item successfully: ', item);
@@ -306,6 +308,7 @@ router.get('/procedurehistory', (req, res) => {
   console.log('Received GET request for PROCEDUREHISTORY', req.body);
 
   ProcedureHistory.find()
+    .populate('procedure')
     .then(result => {
       res.status(200).send(result.reverse());
       console.log('Current procedure history list sent');
@@ -326,6 +329,7 @@ router.get('/procedurehistory/:id', (req, res) => {
   console.log('Received GET request for PROCEDUREHISTORY', req.body);
 
   ProcedureHistory.findOne({ _id: req.params.id })
+    .populate('procedure')
     .then(procedureHistory => {
       res.status(200).send(procedureHistory);
       console.log('Sent back item successfully:', procedureHistory);
