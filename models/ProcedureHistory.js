@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const procedureHistorySchema = new Schema({
   procedure: { type: Schema.Types.ObjectId, ref: 'Procedure' },
-  dentist: { type: Schema.Types.ObjectId, ref: 'User' },
+  dentist: { type: String },
   location: { type: String }
 },
 { 
