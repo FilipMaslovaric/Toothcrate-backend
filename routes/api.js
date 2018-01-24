@@ -209,6 +209,7 @@ router.get('/procedure', (req, res) => {
   console.log('Received GET request for PROCEDURE', req.body);
 
   Procedure.find()
+    .populate('items.item')
     .then(result => {
       res.status(200).send(result.reverse());
       console.log('Current procedure template list sent');
@@ -224,6 +225,7 @@ router.get('/procedure/:id', (req, res) => {
   console.log('Received GET(one) request for PROCEDURE', req.body);
 
   Procedure.findOne({ _id: req.params.id })
+    .populate('items.item')
     .then(procedure => {
       res.status(200).send(procedure);
       console.log('Sent back item successfully: ', procedure);
